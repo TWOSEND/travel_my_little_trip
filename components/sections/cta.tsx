@@ -85,7 +85,7 @@ export function CTA() {
 
             <div className="mt-10 flex flex-col items-center gap-3">
               <a
-                href="#"
+                href="/login"
                 className="group inline-flex h-14 w-full items-center justify-center gap-2 rounded-full px-10 text-base font-bold shadow-lg shadow-amber-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 sm:w-auto"
                 style={{
                   background:

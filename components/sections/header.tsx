@@ -46,7 +46,7 @@ export function Header() {
         </nav>
 
         <a
-          href="#cta"
+          href="/login"
           className="inline-flex h-10 items-center justify-center rounded-full bg-[var(--color-foreground)] px-5 text-sm font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.98]"
         >
           무료 시작

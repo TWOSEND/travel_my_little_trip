@@ -44,7 +44,7 @@ export function Hero() {
 
           <div className="mt-9 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <a
-              href="#cta"
+              href="/login"
               className="group inline-flex h-14 w-full items-center justify-center gap-2 rounded-full px-8 text-base font-semibold text-white shadow-lg shadow-sky-500/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-sky-500/30 active:translate-y-0 sm:w-auto"
               style={{
                 background:
