@@ -45,8 +45,8 @@ export async function POST(_req: NextRequest, { params }: Params) {
 
   const prompt = `목적지: ${trip.destination}, 기간: ${trip.start_date} ~ ${trip.end_date}
 위 여행에 적합한 장소 10곳을 추천해줘.
-반드시 아래 JSON 배열 형식만 응답해. 다른 텍스트 없이.
-[{ "name": string, "description": string, "category": string }]`;
+반드시 아래 JSON 형식만 응답해. 다른 텍스트 없이.
+{ "places": [{ "name": string, "description": string, "category": string }] }`;
 
   let places: { name: string; description: string; category: string }[];
 
@@ -59,7 +59,14 @@ export async function POST(_req: NextRequest, { params }: Params) {
 
     const raw = completion.choices[0].message.content ?? "{}";
     const parsed = JSON.parse(raw);
-    places = Array.isArray(parsed) ? parsed : (parsed.places ?? parsed.data ?? []);
+    places = parsed.places ?? [];
+
+    if (places.length === 0) {
+      return NextResponse.json(
+        { success: false, error: "AI가 장소를 반환하지 않았습니다. 다시 시도해주세요." },
+        { status: 500 },
+      );
+    }
   } catch {
     return NextResponse.json(
       { success: false, error: "AI 응답 파싱 실패" },

@@ -4,9 +4,11 @@ import { createClient } from "@/app/lib/supabase/server";
 import { SignOutButton } from "@/app/dashboard/components/SignOutButton";
 import { TodoList } from "./components/TodoList";
 import { PlaceRecommend } from "./components/PlaceRecommend";
+import { Itinerary } from "./components/Itinerary";
 import type { Trip } from "@/app/api/trips/route";
 import type { Todo } from "@/app/api/trips/[id]/todos/route";
 import type { RecommendedPlace } from "@/app/api/trips/[id]/recommend/route";
+import type { ItineraryDay } from "@/app/api/trips/[id]/itinerary/route";
 
 async function getTrip(id: string, userId: string): Promise<Trip | null> {
   const supabase = await createClient();
@@ -39,6 +41,16 @@ async function getPlaces(tripId: string): Promise<RecommendedPlace[]> {
   return data ?? [];
 }
 
+async function getItinerary(tripId: string): Promise<ItineraryDay[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("itinerary_days")
+    .select("*")
+    .eq("trip_id", tripId)
+    .order("day_number", { ascending: true });
+  return data ?? [];
+}
+
 export default async function TripDetailPage({
   params,
 }: {
@@ -52,10 +64,11 @@ export default async function TripDetailPage({
 
   if (!user) notFound();
 
-  const [trip, todos, places] = await Promise.all([
+  const [trip, todos, places, itinerary] = await Promise.all([
     getTrip(id, user.id),
     getTodos(id),
     getPlaces(id),
+    getItinerary(id),
   ]);
 
   if (!trip) notFound();
@@ -109,6 +122,13 @@ export default async function TripDetailPage({
             AI 장소 추천
           </h2>
           <PlaceRecommend tripId={id} initialPlaces={places} />
+        </div>
+
+        <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
+          <h2 className="text-base font-semibold text-[var(--color-foreground)] mb-2">
+            AI 일정 생성
+          </h2>
+          <Itinerary tripId={id} initialDays={itinerary} />
         </div>
       </main>
     </div>
