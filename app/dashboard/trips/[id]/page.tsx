@@ -3,8 +3,10 @@ import Link from "next/link";
 import { createClient } from "@/app/lib/supabase/server";
 import { SignOutButton } from "@/app/dashboard/components/SignOutButton";
 import { TodoList } from "./components/TodoList";
+import { PlaceRecommend } from "./components/PlaceRecommend";
 import type { Trip } from "@/app/api/trips/route";
 import type { Todo } from "@/app/api/trips/[id]/todos/route";
+import type { RecommendedPlace } from "@/app/api/trips/[id]/recommend/route";
 
 async function getTrip(id: string, userId: string): Promise<Trip | null> {
   const supabase = await createClient();
@@ -27,6 +29,16 @@ async function getTodos(tripId: string): Promise<Todo[]> {
   return data ?? [];
 }
 
+async function getPlaces(tripId: string): Promise<RecommendedPlace[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("recommended_places")
+    .select("*")
+    .eq("trip_id", tripId)
+    .order("created_at", { ascending: true });
+  return data ?? [];
+}
+
 export default async function TripDetailPage({
   params,
 }: {
@@ -40,10 +52,13 @@ export default async function TripDetailPage({
 
   if (!user) notFound();
 
-  const trip = await getTrip(id, user.id);
-  if (!trip) notFound();
+  const [trip, todos, places] = await Promise.all([
+    getTrip(id, user.id),
+    getTodos(id),
+    getPlaces(id),
+  ]);
 
-  const todos = await getTodos(id);
+  if (!trip) notFound();
 
   const nights = Math.round(
     (new Date(trip.end_date).getTime() - new Date(trip.start_date).getTime()) /
@@ -73,8 +88,8 @@ export default async function TripDetailPage({
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 py-10">
-        <div className="mb-8">
+      <main className="max-w-3xl mx-auto px-4 py-10 space-y-6">
+        <div>
           <h1 className="text-2xl font-bold text-[var(--color-foreground)]">{trip.title}</h1>
           <p className="text-[var(--color-muted-foreground)] mt-1">{trip.destination}</p>
           <p className="text-sm text-[var(--color-muted-foreground)] mt-1">
@@ -87,6 +102,13 @@ export default async function TripDetailPage({
             Todo 리스트
           </h2>
           <TodoList tripId={id} initialTodos={todos} />
+        </div>
+
+        <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
+          <h2 className="text-base font-semibold text-[var(--color-foreground)] mb-2">
+            AI 장소 추천
+          </h2>
+          <PlaceRecommend tripId={id} initialPlaces={places} />
         </div>
       </main>
     </div>
