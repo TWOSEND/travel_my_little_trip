@@ -40,9 +40,12 @@ export default async function DashboardPage() {
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
           <span className="font-semibold text-[var(--color-foreground)]">내 여행</span>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-[var(--color-muted-foreground)]">
+            <Link
+              href="/profile"
+              className="text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] transition-colors"
+            >
               {user?.email}
-            </span>
+            </Link>
             {pro ? (
               <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold text-white" style={{ background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)" }}>
                 PRO
