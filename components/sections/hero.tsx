@@ -44,14 +44,14 @@ export function Hero() {
 
           <div className="mt-9 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <a
-              href="/login"
+              href="/payment"
               className="group inline-flex h-14 w-full items-center justify-center gap-2 rounded-full px-8 text-base font-semibold text-white shadow-lg shadow-sky-500/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-sky-500/30 active:translate-y-0 sm:w-auto"
               style={{
                 background:
                   "linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)",
               }}
             >
-              지금 무료로 일정 만들기
+              지금 시작하기
               <svg
                 width="18"
                 height="18"
@@ -68,10 +68,6 @@ export function Hero() {
               </svg>
             </a>
           </div>
-
-          <p className="mt-4 text-sm text-[var(--color-muted-foreground)]">
-            신용카드 불필요 · 3분이면 첫 일정 완성
-          </p>
 
           <div className="mt-14 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-[var(--color-muted-foreground)]">
             <Stat value="10분" label="평균 일정 생성" />

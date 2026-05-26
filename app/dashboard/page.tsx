@@ -13,13 +13,26 @@ async function getTrips(userId: string): Promise<Trip[]> {
   return data ?? [];
 }
 
+async function isPro(userId: string): Promise<boolean> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("payments")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("status", "completed")
+    .limit(1);
+  return (data?.length ?? 0) > 0;
+}
+
 export default async function DashboardPage() {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const trips = user ? await getTrips(user.id) : [];
+  const [trips, pro] = user
+    ? await Promise.all([getTrips(user.id), isPro(user.id)])
+    : [[], false];
 
   return (
     <div className="min-h-screen bg-[var(--color-background)]">
@@ -30,6 +43,27 @@ export default async function DashboardPage() {
             <span className="text-sm text-[var(--color-muted-foreground)]">
               {user?.email}
             </span>
+            {pro ? (
+              <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold text-white" style={{ background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)" }}>
+                PRO
+              </span>
+            ) : (
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center rounded-full border border-[var(--color-border)] px-2.5 py-0.5 text-xs font-semibold text-[var(--color-muted-foreground)]">
+                  FREE
+                </span>
+                <Link
+                  href="/payment"
+                  className="inline-flex items-center gap-1 rounded-full px-3 py-0.5 text-xs font-bold text-white transition-all hover:-translate-y-0.5"
+                  style={{ background: "linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%)" }}
+                >
+                  업그레이드
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </Link>
+              </div>
+            )}
             <SignOutButton />
           </div>
         </div>

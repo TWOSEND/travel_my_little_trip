@@ -1,7 +1,7 @@
 const benefits = [
-  "첫 일정 무료 체험 (카드 등록 없음)",
   "7일 이내 환불 보장",
   "생성한 일정 PDF 저장·공유 무제한",
+  "모든 플랜 즉시 이용 가능",
 ];
 
 export function CTA() {
@@ -85,7 +85,7 @@ export function CTA() {
 
             <div className="mt-10 flex flex-col items-center gap-3">
               <a
-                href="/login"
+                href="/payment"
                 className="group inline-flex h-14 w-full items-center justify-center gap-2 rounded-full px-10 text-base font-bold shadow-lg shadow-amber-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 sm:w-auto"
                 style={{
                   background:
@@ -93,14 +93,11 @@ export function CTA() {
                   color: "var(--color-accent-foreground)",
                 }}
               >
-                지금 무료 체험 시작하기
+                지금 시작하기
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-1" aria-hidden>
                   <path d="M5 12h14M13 6l6 6-6 6" />
                 </svg>
               </a>
-              <p className="text-sm text-white/70">
-                오늘 가입하면 프리미엄 30일 무료 제공
-              </p>
             </div>
           </div>
         </div>
